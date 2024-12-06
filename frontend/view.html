@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Confessions</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>View Anonymous Confessions</h1>
+        </header>
+
+        <main>
+            <div id="confessions"></div>
+        </main>
+    </div>
+
+    <script>
+        async function fetchMessages() {
+            const response = await fetch("http://localhost:5000/api/getMessages");
+            const messages = await response.json();
+
+            const confessionsDiv = document.getElementById("confessions");
+            confessionsDiv.innerHTML = "";
+
+            messages.forEach((msg, index) => {
+                const confessionEl = document.createElement("div");
+                confessionEl.classList.add("confession");
+
+                confessionEl.innerHTML = `
+                    <p><strong>#${index + 1} - ${msg.name}</strong></p>
+                    <p>${msg.message}</p>
+                    <small>${new Date(msg.timestamp).toLocaleString()}</small>
+                    <hr>
+                `;
+
+                confessionsDiv.appendChild(confessionEl);
+            });
+        }
+
+        fetchMessages();
+    </script>
+</body>
+</html>
